@@ -37,7 +37,7 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        myDatabaseRef = FirebaseDatabase.getInstance().getReference().child("products").child("0");
+        myDatabaseRef = FirebaseDatabase.getInstance().getReference().child("products");
     }
 
     @Override
@@ -47,14 +47,16 @@ public class ProductActivity extends AppCompatActivity {
         ValueEventListener productListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    String price="", description="", title="", url="";
-                    price = dataSnapshot.child("price").getValue(String.class);
-                    description = dataSnapshot.child("description").getValue(String.class);
-                    title = dataSnapshot.child("title").getValue(String.class);
-                    url = dataSnapshot.child("url").getValue(String.class);
+                for(DataSnapshot productSnapshot: dataSnapshot.getChildren()) {
+                    String price = "", description = "", title = "", url = "";
+                    price = productSnapshot.child("price").getValue(String.class);
+                    description = productSnapshot.child("description").getValue(String.class);
+                    title = productSnapshot.child("title").getValue(String.class);
+                    url = productSnapshot.child("url").getValue(String.class);
                     ProductEntry p = new ProductEntry(title, url, price, description);
                     Toast.makeText(ProductActivity.this, p.title, Toast.LENGTH_LONG).show();
-
+                    myProductEntryList.add(p);
+                }
             }
 
             @Override
