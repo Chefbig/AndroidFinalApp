@@ -13,24 +13,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ca.ncai.finalapp.models.Product;
+
 public class ProductActivity extends AppCompatActivity {
 
     DatabaseReference myDatabaseRef;
-    final ArrayList<ProductEntry> myProductEntryList= new ArrayList<>();
-    public class ProductEntry {
-        public String price;
-        public String description;
-        public String title;
-        public String url;
+    final ArrayList<Product> myProductEntryList= new ArrayList<>();
 
-        public ProductEntry(){}
-        public ProductEntry(String title, String url, String price, String description) {
-            this.title = title;
-            this.url = url;
-            this.price = price;
-            this.description = description;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +37,13 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot productSnapshot: dataSnapshot.getChildren()) {
-                    String price = "", description = "", title = "", url = "";
-                    price = productSnapshot.child("price").getValue(String.class);
-                    description = productSnapshot.child("description").getValue(String.class);
-                    title = productSnapshot.child("title").getValue(String.class);
-                    url = productSnapshot.child("url").getValue(String.class);
-                    ProductEntry p = new ProductEntry(title, url, price, description);
+                    Product p = productSnapshot.getValue(Product.class);
+//                    String price = "", description = "", title = "", url = "";
+//                    price = productSnapshot.child("price").getValue(String.class);
+//                    description = productSnapshot.child("description").getValue(String.class);
+//                    title = productSnapshot.child("title").getValue(String.class);
+//                    url = productSnapshot.child("url").getValue(String.class);
+//                    Product p = new Product(title, url, price, description);
                     Toast.makeText(ProductActivity.this, p.title, Toast.LENGTH_LONG).show();
                     myProductEntryList.add(p);
                 }
