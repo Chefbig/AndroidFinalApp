@@ -20,6 +20,7 @@
     <string name="pref_default_address">160 Princess St</string>
 
     <string name="pref_title_ask_before_posting">Ask before posting</string>
+    <string name="pref_title_default_number_of_items">Default number of items fetch</string>
     <string-array name="pref_ask_before_posting_titles">
         <item>Always</item>
         <item>Never</item>
