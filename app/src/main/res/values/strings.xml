@@ -1,11 +1,23 @@
 <resources>
     <string name="app_name">FinalApp</string>
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">144916956149932</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb144916956149932</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="loading">loading...</string>
+
+
+    <!-- Strings related to Facebook Login -->
+    <string name="signed_out">You are not singed in. You must login to use this app.</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="facebook_title_text">Facebook Login</string>
+    <string name="firebase_status_fmt">Firebase User: %s</string>
+    <string name="facebook_status_fmt">Facebook User: %s</string>
 
     <!-- Strings related to Settings -->
 
@@ -31,8 +43,6 @@
     </string-array>
 
 
-
-
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 
@@ -42,4 +52,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="myapplogo">MyAppLogo</string>
 </resources>

@@ -13,9 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    // Firebase instance variables
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +51,44 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Todo: remove
         findViewById(R.id.setting_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                startActivity(new Intent(MainActivity.this, FacebookLoginActivity.class));
             }
         });
+        //check user status
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        //Display user info
+        updateUI();
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        updateUI();
+    }
+
+    private void updateUI() {
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        if (mFirebaseUser == null) {
+            // ask user to login
+            Toast.makeText(this,"Please login first", Toast.LENGTH_LONG);
+            startActivity(new Intent(this, FacebookLoginActivity.class));
+            //setupViewPager(vp, null);
+        } else {
+            //setupViewPager(vp, mFirebaseUser);
+            //Display user info
+            NavigationView v = (NavigationView) findViewById(R.id.nav_view);
+            TextView tvUserName = (TextView) v.getHeaderView(0).findViewById(R.id.user_name);
+            tvUserName.setText(mFirebaseUser.getDisplayName());
+            TextView tvUserEmail = (TextView) v.getHeaderView(0).findViewById(R.id.user_email);
+            tvUserEmail.setText(mFirebaseUser.getEmail());
+        }
     }
 
     @Override
@@ -58,6 +99,16 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if(mFirebaseUser != null)
+        {   menu.getItem(1).setVisible(false);
+            menu.getItem(2).setVisible(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -76,6 +127,16 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            return true;
+        }
+        if(id==R.id.action_login){
+            startActivity(new Intent(MainActivity.this, FacebookLoginActivity.class));
+            return true;
+        }
+        if(id==R.id.action_logout){
+            //show user status, don't logout user directly
+            startActivity(new Intent(MainActivity.this, FacebookLoginActivity.class));
             return true;
         }
 
