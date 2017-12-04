@@ -33,11 +33,11 @@
     <EditTextPreference
         android:defaultValue="100"
         android:inputType="number"
-        android:key="number_of_items"
+        android:key="number_of_colums"
         android:selectAllOnFocus="true"
         android:maxLines="1"
         android:singleLine="true"
-        android:title="@string/pref_title_default_number_of_items" />
+        android:title="@string/pref_title_default_number_of_columns" />
 
 
 

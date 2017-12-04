@@ -1,6 +1,7 @@
 package ca.ncai.finalapp.viewholder;
 
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ public class DealViewHolder extends ViewHolder {
     public DealViewHolder(ViewGroup parent) {
         super(LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.deal_entry, parent, false));
+        Log.d("Nico", "this DealViewHolder");
         imageView = (NetworkImageView) itemView.findViewById(R.id.image);
         priceView = (TextView) itemView.findViewById(R.id.price);
         itemView.setOnClickListener(clickListener);

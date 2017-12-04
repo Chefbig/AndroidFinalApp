@@ -179,7 +179,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("example_text"));
             bindPreferenceSummaryToValue(findPreference("example_list"));
-            bindPreferenceSummaryToValue(findPreference("number_of_items"));
+            bindPreferenceSummaryToValue(findPreference("number_of_colums"));
         }
 
         @Override

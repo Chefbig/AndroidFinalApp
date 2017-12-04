@@ -135,6 +135,8 @@ public class FragmentDeal extends Fragment {
             Log.d("Nico", "this DealAdapter");
             this.deals = deals;
             this.imageRequester = imageRequester;
+            //try...
+            notifyDataSetChanged();
         }
 
         void setDeals(List<Deal> deals) {
