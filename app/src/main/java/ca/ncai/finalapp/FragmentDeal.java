@@ -1,10 +1,15 @@
 package ca.ncai.finalapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -12,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -34,11 +41,76 @@ public class FragmentDeal extends Fragment {
     FirebaseDatabase database;
     DatabaseReference dealRef;
     DealAdapter adapter;
+    private RecyclerView mRecycler;
+    private LinearLayoutManager mManager;
+    private FirebaseRecyclerAdapter<Deal, DealViewHolder> mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_deal, container, false);
+
+        database = FirebaseDatabase.getInstance();
+        dealRef = database.getReference();
+        View rootView = inflater.inflate(R.layout.fragment_deal, container, false);
+
+        mRecycler = rootView.findViewById(R.id.deal_list);
+        mRecycler.setHasFixedSize(true);
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mManager = new LinearLayoutManager(getActivity());
+        mManager.setReverseLayout(true);
+        mManager.setStackFromEnd(true);
+        mRecycler.setLayoutManager(mManager);
+
+        Query postsQuery = getQuery(dealRef);
+
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Deal>()
+                .setQuery(postsQuery, Deal.class)
+                .build();
+        mAdapter = new FirebaseRecyclerAdapter<Deal, DealViewHolder>(options){
+
+            @Override
+            public DealViewHolder onCreateViewHolder(View viewGroup, int viewType) {
+                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+                return new DealViewHolder(inflater.inflate(R.layout.deal_entry, viewGroup, false));
+            }
+
+            @Override
+            protected void onBindViewHolder(DealViewHolder holder, int position, Deal model) {
+                final DatabaseReference dealRef = getRef(position);
+                final String dealKey = dealRef.getKey();
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Launch PostDetailActivity
+                        Intent intent = new Intent(getActivity(), DealDetailActivity.class);
+                        intent.putExtra(DealDetailActivity.EXTRA_DEAL_KEY, dealKey);
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+        };
+        mRecycler.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(mAdapter != null){
+            mAdapter.stopListening();
+        }
+    }
+
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @Override
@@ -46,10 +118,6 @@ public class FragmentDeal extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 //        Toolbar appBar = getActivity().findViewById(R.id.app_bar);
 //        getActivity().setActionBar(appBar);
-
-        ArrayList<Deal> dealsArrayList = getDeals();
-
-
         ImageRequester imageRequester = ImageRequester.getInstance(getActivity());
         Deal headerDeal = getHeaderDeal(dealsArrayList);
         NetworkImageView headerImage = (NetworkImageView) getActivity().findViewById(R.id.app_bar_image);
@@ -68,29 +136,20 @@ public class FragmentDeal extends Fragment {
 
     }
 
-    private ArrayList<Deal>  getDeals() {
-        final ArrayList<Deal> dealsArrayList = new ArrayList<>();
+    public Query getQuery(DatabaseReference databaseReference)
+    {
 
-        database = FirebaseDatabase.getInstance();
-        dealRef = database.getReference("products");
-
-        dealRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot dealSnapshot: dataSnapshot.getChildren()){
-                    Deal deal = dealSnapshot.getValue(Deal.class);
-                    dealsArrayList.add(deal);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });
-
-        return dealsArrayList;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if(mAdapter != null){
+            mAdapter.startListening();
+        }
+    }
+
 
     private Deal getHeaderDeal(ArrayList<Deal> dealsArrayList) {
         if(dealsArrayList.size() ==0)
