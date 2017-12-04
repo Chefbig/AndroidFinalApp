@@ -42,6 +42,15 @@
         <item>0</item>
     </string-array>
 
+    <string-array name="pref_number_of_colums_titles">
+        <item>One</item>
+        <item>Two</item>
+    </string-array>
+    <string-array name="pref_number_of_colums_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>

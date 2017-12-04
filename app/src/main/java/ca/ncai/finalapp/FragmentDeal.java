@@ -1,6 +1,8 @@
 package ca.ncai.finalapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,22 +31,17 @@ import ca.ncai.finalapp.viewholder.DealViewHolder;
  */
 
 public class FragmentDeal extends Fragment {
-    ArrayList<Deal> deals= new ArrayList<>();
+    final ArrayList<Deal> deals= new ArrayList<>();
     DatabaseReference myDatabaseRef;
     private DealAdapter adapter;
-
-
+    ImageRequester imageRequester;
+    int number_of_deals_column;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         Log.d("Nico", "this onCreateView");
-        //myDatabaseRef = FirebaseDatabase.getInstance().getReference().child("deals");
-
-        //myFirebase = new Firebase("https://database-f2992.firebaseio.com/products");
         myDatabaseRef = FirebaseDatabase.getInstance().getReference().child("deals");
-
-
         myDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -53,34 +50,31 @@ public class FragmentDeal extends Fragment {
                     Deal d = dealSnapshot.getValue(Deal.class);
                     deals.add(d);
                 }
+                updateView();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-//        ValueEventListener dealListener = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                Log.d("Nico", "this onDataChange");
-//                for (DataSnapshot dealSnapshot : dataSnapshot.getChildren()) {
-//                    Deal d = dealSnapshot.getValue(Deal.class);
-//                    deals.add(d);
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        };
-//
-//        myDatabaseRef.addValueEventListener(dealListener);
-
         return inflater.inflate(R.layout.fragment_deal, container, false);
+    }
+
+    private void updateView() {
+        Log.d("Nico", "this is updateView");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String spref = prefs.getString("number_of_colums","1");
+        number_of_deals_column = Integer.valueOf(spref);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.deal_list);
+        recyclerView.setLayoutManager(
+                new GridLayoutManager(getActivity(), number_of_deals_column));
+        adapter = new DealAdapter(deals, imageRequester);
+        recyclerView.setAdapter(adapter);
+        adapter = new DealAdapter(deals, imageRequester);
+        recyclerView.setAdapter(adapter);
+//        Deal goodDeal = getGoodDeal(deals);
+//        NetworkImageView headerImage = (NetworkImageView) getActivity().findViewById(R.id.app_bar_image);
+//        imageRequester.setImageFromUrl(headerImage, goodDeal.url);
     }
 
     private Deal getGoodDeal(ArrayList<Deal> deals) {
@@ -99,31 +93,19 @@ public class FragmentDeal extends Fragment {
         super.onStart();
         Log.d("Nico", "this on start");
 
-
-       ImageRequester imageRequester = ImageRequester.getInstance(getActivity());
-
+       imageRequester = ImageRequester.getInstance(getActivity());
         final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.deal_list);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(
-                new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_count)));
-        adapter = new DealAdapter(deals, imageRequester);
-        recyclerView.setAdapter(adapter);
-        Log.d("Nico", "checking deals");
-//
-//        Deal goodDeal = getGoodDeal(deals);
-//        NetworkImageView headerImage = (NetworkImageView) getActivity().findViewById(R.id.app_bar_image);
-//        imageRequester.setImageFromUrl(headerImage, goodDeal.url);
+
+        Log.d("Nico", "updating view");
+        updateView();
 
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
         Log.d("Nico", "this onCreate");
         super.onCreate(savedInstanceState);
-//        Toolbar appBar = (Toolbar) getActivity().findViewById(R.id.app_bar);
-//        getContext().setSupportActionBar(appBar);
-
     }
 
     private static final class DealAdapter extends RecyclerView.Adapter<DealViewHolder> {
@@ -131,12 +113,9 @@ public class FragmentDeal extends Fragment {
         private final ImageRequester imageRequester;
 
         DealAdapter(List<Deal> deals, ImageRequester imageRequester) {
-
             Log.d("Nico", "this DealAdapter");
             this.deals = deals;
             this.imageRequester = imageRequester;
-            //try...
-            notifyDataSetChanged();
         }
 
         void setDeals(List<Deal> deals) {
@@ -148,14 +127,12 @@ public class FragmentDeal extends Fragment {
 
         @Override
         public DealViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-
             Log.d("Nico", "this onCreateViewHolder");
             return new DealViewHolder(viewGroup);
         }
 
         @Override
         public void onBindViewHolder(DealViewHolder viewHolder, int i) {
-
             Log.d("Nico", "this onBindViewHolder");
             viewHolder.bind(deals.get(i), imageRequester);
         }
@@ -166,10 +143,30 @@ public class FragmentDeal extends Fragment {
         }
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
         Log.d("Nico", "this onViewCreated");
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+
+        Log.d("Nico", "this onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("Nico", "this onResume");
+        super.onResume();
+        updateView();
     }
 }
