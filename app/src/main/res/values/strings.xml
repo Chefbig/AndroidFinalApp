@@ -53,4 +53,9 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="myapplogo">MyAppLogo</string>
+
+    <string name="product_category">Weekly Great Deals</string>
+    <string name="product_description">
+        Buy Canada, Safe and Healthy.
+    </string>
 </resources>
