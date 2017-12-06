@@ -18,13 +18,14 @@ import ca.ncai.finalapp.models.Deal;
  */
 
 public class DealViewHolder extends ViewHolder {
+    private static final String TAG = "DealViewHolder";
     private final NetworkImageView imageView;
     private final TextView priceView;
 
     public DealViewHolder(ViewGroup parent) {
         super(LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.deal_entry, parent, false));
-        Log.d("Nico", "this DealViewHolder");
+        Log.d(TAG, "this DealViewHolder");
         imageView = (NetworkImageView) itemView.findViewById(R.id.image);
         priceView = (TextView) itemView.findViewById(R.id.price);
         itemView.setOnClickListener(clickListener);

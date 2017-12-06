@@ -61,6 +61,16 @@
         <item name="scrimVisibleHeightTrigger">140dp</item>
     </style>
 
+    <style name="CollapsingOrderToolbar" parent="">
+        <item name="collapsedTitleTextAppearance">@style/TextAppearance.Logo</item>
+        <item name="contentScrim">?attr/colorPrimary</item>
+        <item name="expandedTitleGravity">top</item>
+        <item name="expandedTitleMarginStart">124dp</item>
+        <item name="expandedTitleMarginTop">80dp</item>
+        <item name="expandedTitleTextAppearance">@style/TextAppearance.Logo</item>
+        <item name="scrimVisibleHeightTrigger">80dp</item>
+    </style>
+
     <style name="TextAppearance.Logo" parent="TextAppearance.AppCompat.Display3">
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">22sp</item>
@@ -69,6 +79,14 @@
 
     <style name="CollapsingToolbarContent" parent="">
         <item name="android:layout_marginTop">160dp</item>
+        <item name="android:layout_marginLeft">124dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="CollapsingOrderToolbarContent" parent="">
+        <item name="android:layout_marginTop">50dp</item>
         <item name="android:layout_marginLeft">124dp</item>
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:layout_gravity">top</item>

@@ -31,6 +31,7 @@ import ca.ncai.finalapp.viewholder.DealViewHolder;
  */
 
 public class FragmentDeal extends Fragment {
+    private static final String TAG = "FragmentDeal";
     final ArrayList<Deal> deals= new ArrayList<>();
     DatabaseReference myDatabaseRef;
     private DealAdapter adapter;
@@ -40,12 +41,12 @@ public class FragmentDeal extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.d("Nico", "this onCreateView");
+        Log.d(TAG, "this onCreateView");
         myDatabaseRef = FirebaseDatabase.getInstance().getReference().child("deals");
         myDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Nico", "this onDataChange");
+                Log.d(TAG, "this onDataChange");
                 for (DataSnapshot dealSnapshot : dataSnapshot.getChildren()) {
                     Deal d = dealSnapshot.getValue(Deal.class);
                     deals.add(d);
@@ -61,7 +62,7 @@ public class FragmentDeal extends Fragment {
     }
 
     private void updateView() {
-        Log.d("Nico", "this is updateView");
+        Log.d(TAG, "this is updateView");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String spref = prefs.getString("number_of_colums","1");
         number_of_deals_column = Integer.valueOf(spref);
@@ -78,7 +79,7 @@ public class FragmentDeal extends Fragment {
     }
 
     private Deal getGoodDeal(ArrayList<Deal> deals) {
-        Log.d("Nico", "this getGoodDeal");
+        Log.d(TAG, "this getGoodDeal");
         if(deals.size() !=0){
             return deals.get((int) Math.random()*deals.size());
         }
@@ -91,20 +92,20 @@ public class FragmentDeal extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("Nico", "this on start");
+        Log.d(TAG, "this on start");
 
        imageRequester = ImageRequester.getInstance(getActivity());
         final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.deal_list);
         recyclerView.setHasFixedSize(true);
 
-        Log.d("Nico", "updating view");
+        Log.d(TAG, "updating view");
         updateView();
 
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("Nico", "this onCreate");
+        Log.d(TAG, "this onCreate");
         super.onCreate(savedInstanceState);
     }
 
@@ -113,27 +114,27 @@ public class FragmentDeal extends Fragment {
         private final ImageRequester imageRequester;
 
         DealAdapter(List<Deal> deals, ImageRequester imageRequester) {
-            Log.d("Nico", "this DealAdapter");
+            Log.d(TAG, "this DealAdapter");
             this.deals = deals;
             this.imageRequester = imageRequester;
         }
 
         void setDeals(List<Deal> deals) {
 
-            Log.d("Nico", "this setDeals");
+            Log.d(TAG, "this setDeals");
             this.deals = deals;
             notifyDataSetChanged();
         }
 
         @Override
         public DealViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            Log.d("Nico", "this onCreateViewHolder");
+            Log.d(TAG, "this onCreateViewHolder");
             return new DealViewHolder(viewGroup);
         }
 
         @Override
         public void onBindViewHolder(DealViewHolder viewHolder, int i) {
-            Log.d("Nico", "this onBindViewHolder");
+            Log.d(TAG, "this onBindViewHolder");
             viewHolder.bind(deals.get(i), imageRequester);
         }
 
@@ -146,14 +147,14 @@ public class FragmentDeal extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Log.d("Nico", "this onViewCreated");
+        Log.d(TAG, "this onViewCreated");
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     public void onPause() {
 
-        Log.d("Nico", "this onPause");
+        Log.d(TAG, "this onPause");
         super.onPause();
     }
 
@@ -165,7 +166,7 @@ public class FragmentDeal extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d("Nico", "this onResume");
+        Log.d(TAG, "this onResume");
         super.onResume();
         updateView();
     }

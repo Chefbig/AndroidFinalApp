@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity
                 fragment = new FragmentShopping();
                 break;
             case R.id.nav_shipping:
-            case R.id.nav_share:
                 fragment = new FragmentShipping();
                 break;
         }
