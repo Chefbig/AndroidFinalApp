@@ -80,6 +80,7 @@ public class FragmentOrder extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "this onViewCreated");
         super.onViewCreated(view, savedInstanceState);
+        //updateView();
     }
 
     @Override
@@ -195,7 +196,6 @@ public class FragmentOrder extends Fragment {
 
     private void updateView() {
         Log.d(TAG, "this is updateView");
-
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.order_list);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getActivity()));
